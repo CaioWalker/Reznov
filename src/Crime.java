@@ -1,7 +1,7 @@
 
 public class Crime {
 	private int dia;
-	private int mês;
+	private int mes;
 	private int ano;
 	private int sexo;
 	private int tArma;
@@ -9,13 +9,15 @@ public class Crime {
 	private int cvli;
 	private double latitude;
 	private double longitude;
+	
 	private Crime centro;
 	private Crime centroAnterio;
 	private double distCentro;
-	public Crime(int dia, int mês, int ano, int sexo, int tArma, int idade, int cvli, double latitude, double longitude) {
+	
+	public Crime(int dia, int mes, int ano, int sexo, int tArma, int idade, int cvli, double latitude, double longitude) {
 		super();
 		this.setDia(dia);
-		this.mês = mês;
+		this.mes = mes;
 		this.ano = ano;
 		this.sexo = sexo;
 		this.tArma = tArma;
@@ -25,11 +27,11 @@ public class Crime {
 		this.longitude = longitude;
 	}
 	
-	public int getMês() {
-		return mês;
+	public int getMes() {
+		return mes;
 	}
-	public void setMês(int mês) {
-		this.mês = mês;
+	public void setMes(int mes) {
+		this.mes = mes;
 	}
 	public int getAno() {
 		return ano;
@@ -86,11 +88,42 @@ public class Crime {
 		return this.latitude + this.longitude;
 	}
 	public String toString(){
-		String resultado =this.dia+" "+this.mês+" "+this.ano+" "+this.sexo+" "+this.tArma+" "+this.idade+" "+this.cvli+" "+this.latitude+" "+this.longitude+" Soma:"+this.soma();
+		String resultado =this.dia+" "+this.mes+" "+this.ano+" "+this.sexo+" "+this.tArma+" "+this.idade+" "+this.cvli+" "+this.latitude+" "+this.longitude+" Soma:"+this.soma();
 		return resultado;
 	}
-	public void setCentro(int n){
-		
+
+	public Crime getCentro() {
+		return centro;
+	}
+
+	public void setCentro(Crime centro) {
+		this.centro = centro;
+	}
+
+	public Crime getCentroAnterio() {
+		return centroAnterio;
+	}
+
+	public void setCentroAnterio(Crime centroAnterio) {
+		this.centroAnterio = centroAnterio;
+	}
+
+	public double getDistCentro() {
+		return distCentro;
+	}
+
+	public void setDistCentro(double distCentro) {
+		this.distCentro = distCentro;
 	}
 	
+	public double calcDist(Crime c) {
+		double dist = 0;
+		return dist;
+	}
+	
+	public double calcDist(double dia, double mes, double ano, double sexo, double tArma, double idade, double cvli, double latitude, double longitude) {
+		double dist = 0;
+		return dist;
+	}
+		
 }
