@@ -17,7 +17,7 @@ public class CrimeRepo implements Serializable{
 private static CrimeRepo instance;
 	
 	private ArrayList<Crime> crimes = new ArrayList<>();
-	private static String path = "C:\\Users\\Caio\\workspace\\Reznov\\src"; 
+	private static String path = "C:\\Users\\Caio\\workspace\\Reznov\\src\\crimes.txt"; 
 	
 	public static CrimeRepo getInstance(){
 		if(instance == null){
@@ -41,7 +41,6 @@ private static CrimeRepo instance;
 			
 			
 			while ((linha = lerArq.readLine()) != null) {
-				linha = lerArq.readLine();
 				valores = linha.split(",");
 				atual = new Crime(Integer.parseInt(valores[0]),
 									Integer.parseInt(valores[1]),
@@ -54,6 +53,8 @@ private static CrimeRepo instance;
 									Double.parseDouble(valores[8])
 									);
 				instanciaLocal.cadastrar(atual);
+				linha = lerArq.readLine();
+				System.out.println(atual.toString());
 				
 			}
 			

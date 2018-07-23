@@ -79,6 +79,12 @@ public class Crime {
 	public void setSexo(int sexo) {
 		this.sexo = sexo;
 	}
-	
+	public Double soma(){
+		return this.latitude + this.longitude;
+	}
+	public String toString(){
+		String resultado =this.dia+" "+this.mês+" "+this.ano+" "+this.sexo+" "+this.tArma+" "+this.idade+" "+this.cvli+" "+this.latitude+" "+this.longitude+" Soma:"+this.soma();
+		return resultado;
+	}
 	
 }
