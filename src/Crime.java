@@ -9,6 +9,9 @@ public class Crime {
 	private int cvli;
 	private double latitude;
 	private double longitude;
+	private Crime centro;
+	private Crime centroAnterio;
+	private double distCentro;
 	public Crime(int dia, int mês, int ano, int sexo, int tArma, int idade, int cvli, double latitude, double longitude) {
 		super();
 		this.setDia(dia);
@@ -85,6 +88,9 @@ public class Crime {
 	public String toString(){
 		String resultado =this.dia+" "+this.mês+" "+this.ano+" "+this.sexo+" "+this.tArma+" "+this.idade+" "+this.cvli+" "+this.latitude+" "+this.longitude+" Soma:"+this.soma();
 		return resultado;
+	}
+	public void setCentro(int n){
+		
 	}
 	
 }
