@@ -33,6 +33,7 @@ private static CrimeRepo instance;
 	
 	private static CrimeRepo lerDoArquivo(){
 		CrimeRepo instanciaLocal = new CrimeRepo();
+		int index = 0;
 		try {
 
 			FileReader arq = new FileReader(path);
@@ -40,6 +41,7 @@ private static CrimeRepo instance;
 			String linha;
 			String[] valores;
 			Crime atual;
+
 			
 			
 			while ((linha = lerArq.readLine()) != null) {
@@ -52,16 +54,17 @@ private static CrimeRepo instance;
 									Integer.parseInt(valores[5]),
 									Integer.parseInt(valores[6]),
 									Double.parseDouble(valores[7]),
-									Double.parseDouble(valores[8])
+									Double.parseDouble(valores[8]),
+									index
 									);
 				instanciaLocal.cadastrar(atual);
-				linha = lerArq.readLine();
-				System.out.println(atual.toString());
-				
+				//System.out.println(index);
+				index++;
 			}
 			
 			arq.close();
 		}catch(Exception e) {
+			e.printStackTrace();
 			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
 		}
 		return instanciaLocal;
@@ -97,8 +100,13 @@ private static CrimeRepo instance;
 		this.crimes.add(c);
 	}
 	
+	public ArrayList<Crime> getCrimes(){
+		return this.crimes;
+	}
+	
 	public void setCentros(int k) {
 		//criando os primeiros centros aleatorios
+		System.out.println("criando os primeiros centros aleatorios");
 		Random nAleatorio = new Random();
 		Crime centro;
 		int index;
@@ -109,21 +117,26 @@ private static CrimeRepo instance;
 		}
 	}
 	
+	
 	public void setCentrosCrimes() {
 		double distancia;
 		double distTemp;
+				
 		Crime centro = this.centros.get(1);
+//		System.out.println("adicionando os centros aos crimes");
 		//iterando sobre crimes
 		for(int i=0;i<this.crimes.size();i++) {
 			distancia = 100000000;
+			
 			if(this.centros.contains(this.crimes.get(i))) {
 				this.crimes.get(i).setCentro(this.crimes.get(i));
 			}
+			
 			else {
 				//iterando sobre centros para setar o novo centro de cada crime
 				for(int j=0;j<this.centros.size();j++) {
 					distTemp = this.crimes.get(i).calcDist(this.centros.get(j));
-					if(distTemp>distancia) {
+					if(distTemp<distancia) {
 						distancia=distTemp;
 						centro=this.centros.get(j);
 					}
@@ -132,6 +145,34 @@ private static CrimeRepo instance;
 				this.crimes.get(i).setDistCentro(distancia);
 			}
 		}
+				
+		for(int j=0;j<this.crimes.size();j++){
+			System.out.println(this.crimes.get(j)+","+this.crimes.get(j).getCentro().getIndex());
+		}
+	}
+	
+	public void printCentrosN(){
+		int[] nCentro= new int[this.centros.size()];
+		
+		for(int i=0;i<this.centros.size();i++){
+			nCentro[i]=0;
+		}
+		
+		
+		for(int j=0;j<this.crimes.size();j++){
+			for(int i=0;i<this.centros.size();i++){
+				if(this.crimes.get(j).getCentro()==this.centros.get(i)){
+					nCentro[i]++;
+				}
+			}
+		}
+		
+		for(int i=0;i<this.centros.size();i++){
+			System.out.println("centro "+(i+1)+": "+nCentro[i]);
+		}
+		
+		System.out.println(this.crimes.size());
+		
 	}
 	
 	public int getNMudanças() {
@@ -151,15 +192,16 @@ private static CrimeRepo instance;
 		int ocorrencias;
 		double distancia=100000000;
 		double distNova=100000000;
+		System.out.println("criando os novos centros");
 		
 		
-		int dia;
-		int mes;
-		int ano;
-		int sexo;
-		int tArma;
-		int idade;
-		int cvli;
+		double dia;
+		double mes;
+		double ano;
+		double sexo;
+		double tArma;
+		double idade;
+		double cvli;
 		double latitude;
 		double longitude;
 		
@@ -180,6 +222,8 @@ private static CrimeRepo instance;
 			latitude=0;
 			longitude=0;
 			
+			//System.out.println("somando os valores de cada crime deste grupo");
+			
 			//somando os valores de cada crime deste grupo
 			
 			for(int j=0;j<this.crimes.size();j++) {
@@ -194,12 +238,12 @@ private static CrimeRepo instance;
 					idade=idade+this.crimes.get(j).getIdade();
 					cvli=cvli+this.crimes.get(j).getCvli();
 					latitude=latitude+this.crimes.get(j).getLatitude();
-					longitude=longitude+this.crimes.get(j).getLongitude();
-								
+					longitude=longitude+this.crimes.get(j).getLongitude();		
 				}
 			}
 			
 			//tirando a media para o novo centroide
+			//System.out.println("tirando a media para o novo centroide");
 			
 			dia=dia/ocorrencias;
 			mes=mes/ocorrencias;
@@ -211,19 +255,37 @@ private static CrimeRepo instance;
 			latitude=latitude/ocorrencias;
 			longitude=longitude/ocorrencias;
 
+			//System.out.println(dia+" "+mes+" "+ ano+" "+ sexo+" "+ tArma+" "+ idade+" "+ cvli+" "+ latitude+" "+ longitude);
+			
+			
+			
+			
+			
+			
+			
+			
 			//calculando a distancia do novo centroide para os crimes
+			//System.out.println("calculando a distancia do novo centroide para os crimes");
 			
 			for(int j=0;j<this.crimes.size();j++) {
-				distNova=this.crimes.get(j).calcDist(dia, mes, ano, sexo, tArma, idade, cvli, latitude, longitude);
-				if(distNova>distancia) {
-					novoCentro=this.crimes.get(j);
+				if(this.crimes.get(j).getCentro()==centro){
+					distNova=this.crimes.get(j).calcDist(dia, mes, ano, sexo, tArma, idade, cvli, latitude, longitude);
+					//System.out.println(distNova+" "+distancia);
+					if(distNova<distancia) {
+						distancia=distNova;
+						novoCentro=this.crimes.get(j);
+					}
 				}
 			}
 			
 			//adicionando o novo centro ao arraylist novo
 			
+//			for(int j=0;j<this.centros.size();j++) {
+//				System.out.println(novosCentros);
+//			}
+			
 			novosCentros.add(novoCentro);
-						
+			distancia = 10000000;
 		}
 		//substituindo novos centros
 		

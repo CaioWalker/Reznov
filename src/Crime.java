@@ -13,9 +13,9 @@ public class Crime {
 	private Crime centro;
 	private Crime centroAnterio;
 	private double distCentro;
+	private int index;
 	
-	public Crime(int dia, int mes, int ano, int sexo, int tArma, int idade, int cvli, double latitude, double longitude) {
-		super();
+	public Crime(int dia, int mes, int ano, int sexo, int tArma, int idade, int cvli, double latitude, double longitude, int index) {
 		this.setDia(dia);
 		this.mes = mes;
 		this.ano = ano;
@@ -25,6 +25,7 @@ public class Crime {
 		this.cvli = cvli;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.index = index;
 	}
 	
 	public int getMes() {
@@ -84,11 +85,17 @@ public class Crime {
 	public void setSexo(int sexo) {
 		this.sexo = sexo;
 	}
-	public Double soma(){
-		return this.latitude + this.longitude;
-	}
+	
 	public String toString(){
-		String resultado =this.dia+" "+this.mes+" "+this.ano+" "+this.sexo+" "+this.tArma+" "+this.idade+" "+this.cvli+" "+this.latitude+" "+this.longitude+" Soma:"+this.soma();
+		String resultado =this.dia+","
+							+this.mes+","
+							+this.ano+","
+							+this.sexo+","
+							+this.tArma+","
+							+this.idade+","
+							+this.cvli+","
+							+this.latitude+","
+							+this.longitude;
 		return resultado;
 	}
 
@@ -117,13 +124,45 @@ public class Crime {
 	}
 	
 	public double calcDist(Crime c) {
-		double dist = 0;
+		double distCidades =6371*Math.acos(Math.cos(Math.PI*(90-c.getLatitude())/180)
+				*Math.cos((90-this.latitude)*Math.PI/180)+Math.sin((90-c.getLatitude())
+						*Math.PI/180)*Math.sin((90-this.latitude)*Math.PI/180)
+						*Math.cos((this.longitude-c.getLongitude())*Math.PI/180));
+		
+		double dist = Math.sqrt( Math.pow(((this.dia-c.getDia())/30), 2)
+				+Math.pow(((this.mes-c.getMes())/11), 2)
+				+Math.pow(((this.ano-c.getAno())/9), 2)
+				+Math.pow(((this.sexo-c.getSexo())/2), 2)
+				+Math.pow(((this.tArma-c.gettArma())/2), 2)
+				+Math.pow(((this.idade-c.getIdade())/99), 2)
+				+Math.pow(((this.cvli-c.getCvli())/2), 2)
+				+Math.pow(distCidades/700, 2)
+				);
+						
 		return dist;
 	}
 	
 	public double calcDist(double dia, double mes, double ano, double sexo, double tArma, double idade, double cvli, double latitude, double longitude) {
-		double dist = 0;
+		double distCidades =6371*Math.acos(Math.cos(Math.PI*(90-latitude)/180)
+				*Math.cos((90-this.latitude)*Math.PI/180)+Math.sin((90-latitude)
+						*Math.PI/180)*Math.sin((90-this.latitude)*Math.PI/180)
+						*Math.cos((this.longitude-longitude)*Math.PI/180));
+		
+		double dist = Math.sqrt( Math.pow(((this.dia-dia)/30), 2)
+				+Math.pow(((this.mes-mes)/11), 2)
+				+Math.pow(((this.ano-ano)/9), 2)
+				+Math.pow(((this.sexo-sexo)/2), 2)
+				+Math.pow(((this.tArma-tArma)/2), 2)
+				+Math.pow(((this.idade-idade)/99), 2)
+				+Math.pow(((this.cvli-cvli)/2), 2)
+				+Math.pow(distCidades/700, 2)
+				);			
 		return dist;
 	}
+
+	public int getIndex() {
+		return index;
+	}
+
 		
 }
