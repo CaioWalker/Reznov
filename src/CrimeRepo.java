@@ -1,8 +1,9 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.ObjectOutputStream;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -72,27 +73,61 @@ private static CrimeRepo instance;
 	
 	public void salvarArquivo(){
 		
-		File out = new File("curso.dat");
-		FileOutputStream fos = null;
-		ObjectOutputStream oos = null;
+		File outCrimes = new File("crimes.dat");
+		File outCentros = new File("centros.dat");
 		
 		try{
-			fos = new FileOutputStream(out);
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(instance);
+			// Se o arquivo de centros nao existir, ele gera
+			if (!outCentros.exists()) {
+				outCentros.createNewFile();
+			}
+			// Prepara para escrever no arquivo de centros
+			FileWriter fwCentros = new FileWriter(outCentros.getAbsoluteFile(), true);
+			BufferedWriter bwCentros = new BufferedWriter(fwCentros);
+			PrintWriter saidaCentros = new PrintWriter(bwCentros);
+			
+			//itera sobre o array de centros para salvar cada linha no arquivo
+			
+			int[] nCentro= new int[this.centros.size()];
+			
+			for(int i=0;i<this.centros.size();i++){
+				nCentro[i]=0;
+			}
+			
+			
+			for(int j=0;j<this.crimes.size();j++){
+				for(int i=0;i<this.centros.size();i++){
+					if(this.crimes.get(j).getCentro()==this.centros.get(i)){
+						nCentro[i]++;
+					}
+				}
+			}
+			
+			for(int i=0;i<this.centros.size();i++){
+				saidaCentros.println("centro "+(i+1)+": "+nCentro[i]);
+			}
+			
+			saidaCentros.close();
+			
+			
+			// Se o arquivo de crimes nao existir, ele gera
+			if (!outCrimes.exists()) {
+				outCrimes.createNewFile();
+			}
+			// Prepara para escrever no arquivo de crimes
+			FileWriter fwCrimes = new FileWriter(outCrimes.getAbsoluteFile(), true);
+			BufferedWriter bwCrimes = new BufferedWriter(fwCrimes);
+			PrintWriter saidaCrimes = new PrintWriter(bwCrimes);
+			
+			
+			for(int i=0;i<crimes.size();i++){
+				saidaCrimes.println(crimes.get(i)+","+crimes.get(i).getCentro().getIndex());
+			}
+			
+			saidaCrimes.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
-		}
-		finally{
-			if(oos!=null){
-				try{
-					oos.close();
-				}
-				catch(Exception e){
-//					não faz nada
-				}
-			}
 		}
 	}
 	
@@ -123,7 +158,7 @@ private static CrimeRepo instance;
 		double distTemp;
 				
 		Crime centro = this.centros.get(1);
-//		System.out.println("adicionando os centros aos crimes");
+		
 		//iterando sobre crimes
 		for(int i=0;i<this.crimes.size();i++) {
 			distancia = 100000000;
@@ -146,9 +181,6 @@ private static CrimeRepo instance;
 			}
 		}
 				
-		for(int j=0;j<this.crimes.size();j++){
-			System.out.println(this.crimes.get(j)+","+this.crimes.get(j).getCentro().getIndex());
-		}
 	}
 	
 	public void printCentrosN(){
@@ -192,6 +224,7 @@ private static CrimeRepo instance;
 		int ocorrencias;
 		double distancia=100000000;
 		double distNova=100000000;
+		
 		System.out.println("criando os novos centros");
 		
 		
@@ -221,8 +254,6 @@ private static CrimeRepo instance;
 			cvli=0;
 			latitude=0;
 			longitude=0;
-			
-			//System.out.println("somando os valores de cada crime deste grupo");
 			
 			//somando os valores de cada crime deste grupo
 			
@@ -255,17 +286,7 @@ private static CrimeRepo instance;
 			latitude=latitude/ocorrencias;
 			longitude=longitude/ocorrencias;
 
-			//System.out.println(dia+" "+mes+" "+ ano+" "+ sexo+" "+ tArma+" "+ idade+" "+ cvli+" "+ latitude+" "+ longitude);
-			
-			
-			
-			
-			
-			
-			
-			
 			//calculando a distancia do novo centroide para os crimes
-			//System.out.println("calculando a distancia do novo centroide para os crimes");
 			
 			for(int j=0;j<this.crimes.size();j++) {
 				if(this.crimes.get(j).getCentro()==centro){
@@ -278,14 +299,10 @@ private static CrimeRepo instance;
 				}
 			}
 			
-			//adicionando o novo centro ao arraylist novo
-			
-//			for(int j=0;j<this.centros.size();j++) {
-//				System.out.println(novosCentros);
-//			}
-			
+
 			novosCentros.add(novoCentro);
 			distancia = 10000000;
+			
 		}
 		//substituindo novos centros
 		
