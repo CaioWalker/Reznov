@@ -129,14 +129,14 @@ public class Crime {
 						*Math.PI/180)*Math.sin((90-this.latitude)*Math.PI/180)
 						*Math.cos((this.longitude-c.getLongitude())*Math.PI/180));
 		
-		double dist = Math.sqrt( Math.pow(((this.dia-c.getDia())/30), 2)
-				+Math.pow(((this.mes-c.getMes())/11), 2)
-				+Math.pow(((this.ano-c.getAno())/9), 2)
-				+Math.pow(((this.sexo-c.getSexo())/2), 2)
-				+Math.pow(((this.tArma-c.gettArma())/2), 2)
-				+Math.pow(((this.idade-c.getIdade())/99), 2)
-				+Math.pow(((this.cvli-c.getCvli())/2), 2)
-				+Math.pow(distCidades/700, 2)
+		double dist = Math.sqrt( Math.pow(((this.dia-c.getDia())/30.0), 2)
+				+Math.pow(((this.mes-c.getMes())/11.0), 2)
+				+Math.pow(((this.ano-c.getAno())/9.0), 2)
+				+Math.pow(((this.sexo-c.getSexo())/2.0), 2)
+				+Math.pow(((this.tArma-c.gettArma())/2.0), 2)
+				+Math.pow(((this.idade-c.getIdade())/99.0), 2)
+				+Math.pow(((this.cvli-c.getCvli())/2.0), 2)
+				+Math.pow(distCidades/700.0, 2)
 				);
 						
 		return dist;
@@ -148,14 +148,14 @@ public class Crime {
 						*Math.PI/180)*Math.sin((90-this.latitude)*Math.PI/180)
 						*Math.cos((this.longitude-longitude)*Math.PI/180));
 		
-		double dist = Math.sqrt( Math.pow(((this.dia-dia)/30), 2)
-				+Math.pow(((this.mes-mes)/11), 2)
-				+Math.pow(((this.ano-ano)/9), 2)
-				+Math.pow(((this.sexo-sexo)/2), 2)
-				+Math.pow(((this.tArma-tArma)/2), 2)
-				+Math.pow(((this.idade-idade)/99), 2)
-				+Math.pow(((this.cvli-cvli)/2), 2)
-				+Math.pow(distCidades/700, 2)
+		double dist = Math.sqrt( Math.pow(((this.dia-dia)/30.0), 2)
+				+Math.pow(((this.mes-mes)/11.0), 2)
+				+Math.pow(((this.ano-ano)/9.0), 2)
+				+Math.pow(((this.sexo-sexo)/2.0), 2)
+				+Math.pow(((this.tArma-tArma)/2.0), 2)
+				+Math.pow(((this.idade-idade)/99.0), 2)
+				+Math.pow(((this.cvli-cvli)/2.0), 2)
+				+Math.pow(distCidades/700.0, 2)
 				);			
 		return dist;
 	}

@@ -20,7 +20,7 @@ private static CrimeRepo instance;
 	
 	private ArrayList<Crime> crimes = new ArrayList<>();
 	private ArrayList<Crime> centros = new ArrayList<>();
-	private static String path = "C:\\Users\\Caio\\workspace\\Reznov\\src\\crimes.txt"; 
+	private static String path = "C:\\Users\\Alessandro\\Desktop\\crimes.txt"; 
 	
 	public static CrimeRepo getInstance(){
 		if(instance == null){
@@ -156,13 +156,14 @@ private static CrimeRepo instance;
 	public void setCentrosCrimes() {
 		double distancia;
 		double distTemp;
+		double distancias = 0;
 				
 		Crime centro = this.centros.get(1);
 		
 		//iterando sobre crimes
 		for(int i=0;i<this.crimes.size();i++) {
 			distancia = 100000000;
-			
+						
 			if(this.centros.contains(this.crimes.get(i))) {
 				this.crimes.get(i).setCentro(this.crimes.get(i));
 			}
@@ -176,11 +177,14 @@ private static CrimeRepo instance;
 						centro=this.centros.get(j);
 					}
 				}
+				distancias = distancias +  distancia;
 				this.crimes.get(i).setCentro(centro);
 				this.crimes.get(i).setDistCentro(distancia);
 			}
+			
 		}
-				
+		System.out.println("soma das distancias: " + distancias);
+		
 	}
 	
 	public void printCentrosN(){
@@ -307,6 +311,39 @@ private static CrimeRepo instance;
 		//substituindo novos centros
 		
 		this.centros=novosCentros;
+	}
+	
+	public void indiceDunn() {
+		
+		double menorDistanciaElmtosDifGrupos =  1000000.0;
+		double maiorDistanciaIntraGrupos = 0.0;
+		double dunnIndex = 0.0;
+		
+		for (int i  = 0; i < this.centros.size(); i++) {
+			for(int j = 0; j < this.crimes.size(); j++) {
+				
+				//condição que verifica se o crime pertence não pertence ao mesmo grupo
+				if(this.crimes.get(i).getCentro() != this.crimes.get(j).getCentro()) {
+					
+					//se a distancia entre os elementos de grupos diferentes
+					//for menor que a menor distancia entre  elementos de grupos diferentes
+					//Seta-se o valor para a variável de menor distancia
+					if(this.crimes.get(i).calcDist(this.crimes.get(j)) < menorDistanciaElmtosDifGrupos)
+					menorDistanciaElmtosDifGrupos = this.crimes.get(i).calcDist(this.crimes.get(j));
+					
+					//Se a menor distancia entre os elementos de grupos diferentes
+					//for maior que a maior distancia entre os grupos
+					//seta-se a maior distancia entre os grupos
+					else if(this.centros.get(i).getCentro().calcDist(this.crimes.get(j).getCentro()) > maiorDistanciaIntraGrupos){
+						maiorDistanciaIntraGrupos = this.crimes.get(i).getCentro().calcDist(this.crimes.get(j).getCentro());
+					}
+				}
+				
+			}
+		}
+			dunnIndex = menorDistanciaElmtosDifGrupos/maiorDistanciaIntraGrupos;
+		
+		System.out.println("Indice Dunn: "+dunnIndex);
 	}
 	
 	
