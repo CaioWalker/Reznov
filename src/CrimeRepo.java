@@ -16,24 +16,17 @@ public class CrimeRepo implements Serializable{
 	 */
 	private static final long serialVersionUID = -8635603547323350634L;
 
-private static CrimeRepo instance;
 	
 	private ArrayList<Crime> crimes = new ArrayList<>();
 	private ArrayList<Crime> centros = new ArrayList<>();
 	private static String path = "C:\\Users\\Alessandro\\Desktop\\crimes.txt"; 
 	
-	public static CrimeRepo getInstance(){
-		if(instance == null){
-			instance = lerDoArquivo();
-		}
-		return instance;
+	
+	public CrimeRepo(){
+		this.lerDoArquivo();
 	}
 	
-	private CrimeRepo(){
-	}
-	
-	private static CrimeRepo lerDoArquivo(){
-		CrimeRepo instanciaLocal = new CrimeRepo();
+	private void lerDoArquivo(){
 		int index = 0;
 		try {
 
@@ -58,7 +51,7 @@ private static CrimeRepo instance;
 									Double.parseDouble(valores[8]),
 									index
 									);
-				instanciaLocal.cadastrar(atual);
+				this.cadastrar(atual);
 				//System.out.println(index);
 				index++;
 			}
@@ -68,7 +61,6 @@ private static CrimeRepo instance;
 			e.printStackTrace();
 			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
 		}
-		return instanciaLocal;
 	}
 	
 	public void salvarArquivo(){
@@ -313,7 +305,7 @@ private static CrimeRepo instance;
 		this.centros=novosCentros;
 	}
 	
-	public void indiceDunn() {
+	public double indiceDunn() {
 		
 		double menorDistanciaElmtosDifGrupos =  1000000.0;
 		double maiorDistanciaIntraGrupos = 0.0;
@@ -344,6 +336,7 @@ private static CrimeRepo instance;
 			dunnIndex = menorDistanciaElmtosDifGrupos/maiorDistanciaIntraGrupos;
 		
 		System.out.println("Indice Dunn: "+dunnIndex);
+		return dunnIndex;
 	}
 	
 	
