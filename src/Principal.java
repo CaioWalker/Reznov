@@ -8,29 +8,35 @@ public class Principal {
 		CrimeRepo temp = new CrimeRepo();;
 		double indice = 0.0;
 		double indTemp;
+		int k = 2;
 		
 		for(int i=0;i<10;i++) {
 			
-			crimes.setCentros(10);
-			crimes.setCentrosCrimes();
-			
-			//crimes.printCentrosN();
-			
-			do {
-				crimes.setNovosCentros();
+			while(k < 11) {
+				crimes.setCentros(k);
 				crimes.setCentrosCrimes();
-				cont++;
-			}while(crimes.getNMudanças()!=0);
-						
-			indTemp=crimes.indiceDunn();
-			if(indTemp>indice) {
-				temp=crimes;
-				indice = indTemp;
-				crimes = new CrimeRepo();
 				
-			}else {
-				crimes = new CrimeRepo();
+				//crimes.printCentrosN();
+				
+				do {
+					crimes.setNovosCentros();
+					crimes.setCentrosCrimes();
+					cont++;
+				}while(crimes.getNMudanças()!=0);
+							
+				indTemp=crimes.indiceDunn();
+				if((indTemp>indice) && (indTemp < 1.0)) {
+					temp=crimes;
+					indice = indTemp;
+					crimes = new CrimeRepo();
+					
+				}else {
+					crimes = new CrimeRepo();
+				}
+				
+				k++;
 			}
+			
 			
 		}
 		
