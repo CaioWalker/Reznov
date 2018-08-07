@@ -63,10 +63,10 @@ public class CrimeRepo implements Serializable{
 		}
 	}
 	
-	public void salvarArquivo(){
+	public void salvarArquivo(int fileName, double dunn){
 		
-		File outCrimes = new File("crimes.dat");
-		File outCentros = new File("centros.dat");
+		File outCrimes = new File("crimes"+ fileName +".dat");
+		File outCentros = new File("centros"+ fileName +".dat");
 		
 		try{
 			// Se o arquivo de centros nao existir, ele gera
@@ -98,6 +98,7 @@ public class CrimeRepo implements Serializable{
 			for(int i=0;i<this.centros.size();i++){
 				saidaCentros.println("centro "+(i+1)+": "+nCentro[i]);
 			}
+			saidaCentros.println("Indice Dunn: " + dunn);
 			
 			saidaCentros.close();
 			
