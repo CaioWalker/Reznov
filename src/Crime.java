@@ -142,6 +142,24 @@ public class Crime {
 		return dist;
 	}
 	
+	public double calcDistManhattan(Crime c) {
+		double distCidades =6371*Math.acos(Math.cos(Math.PI*(90-c.getLatitude())/180)
+				*Math.cos((90-this.latitude)*Math.PI/180)+Math.sin((90-c.getLatitude())
+						*Math.PI/180)*Math.sin((90-this.latitude)*Math.PI/180)
+						*Math.cos((this.longitude-c.getLongitude())*Math.PI/180));
+		
+		double dist = Math.abs((this.dia-c.getDia())/30.0)
+				+Math.abs((this.mes-c.getMes())/11.0)
+				+Math.abs((this.ano-c.getAno())/9.0)
+				+Math.abs((this.sexo-c.getSexo())/2.0)
+				+Math.abs((this.tArma-c.gettArma())/2.0)
+				+Math.abs((this.idade-c.getIdade())/99.0)
+				+Math.abs((this.cvli-c.getCvli())/2.0)
+				+Math.abs(distCidades/700.0);
+						
+		return dist;
+	}
+	
 	public double calcDist(double dia, double mes, double ano, double sexo, double tArma, double idade, double cvli, double latitude, double longitude) {
 		double distCidades =6371*Math.acos(Math.cos(Math.PI*(90-latitude)/180)
 				*Math.cos((90-this.latitude)*Math.PI/180)+Math.sin((90-latitude)
@@ -157,6 +175,24 @@ public class Crime {
 				+Math.pow(((this.cvli-cvli)/2.0), 2)
 				+Math.pow(distCidades/700.0, 2)
 				);			
+		return dist;
+	}
+	
+	public double calcDistManhattan(double dia, double mes, double ano, double sexo, double tArma, double idade, double cvli, double latitude, double longitude) {
+		double distCidades =6371*Math.acos(Math.cos(Math.PI*(90-latitude)/180)
+				*Math.cos((90-this.latitude)*Math.PI/180)+Math.sin((90-latitude)
+						*Math.PI/180)*Math.sin((90-this.latitude)*Math.PI/180)
+						*Math.cos((this.longitude-longitude)*Math.PI/180));
+		
+		double dist = Math.abs((this.dia-dia)/30.0)
+				+Math.abs((this.mes-mes)/11.0)
+				+Math.abs((this.ano-ano)/9.0)
+				+Math.abs((this.sexo-sexo)/2.0)
+				+Math.abs((this.tArma-tArma)/2.0)
+				+Math.abs((this.idade-idade)/99.0)
+				+Math.abs((this.cvli-cvli)/2.0)
+				+Math.abs(distCidades/700.0);
+				
 		return dist;
 	}
 

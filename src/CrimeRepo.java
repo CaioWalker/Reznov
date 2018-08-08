@@ -180,6 +180,40 @@ public class CrimeRepo implements Serializable{
 		
 	}
 	
+	public void setCentrosCrimesManhattan() {
+		double distancia;
+		double distTemp;
+		double distancias = 0;
+				
+		Crime centro = this.centros.get(1);
+		
+		//iterando sobre crimes
+		for(int i=0;i<this.crimes.size();i++) {
+			distancia = 100000000;
+						
+			if(this.centros.contains(this.crimes.get(i))) {
+				this.crimes.get(i).setCentro(this.crimes.get(i));
+			}
+			
+			else {
+				//iterando sobre centros para setar o novo centro de cada crime
+				for(int j=0;j<this.centros.size();j++) {
+					distTemp = this.crimes.get(i).calcDistManhattan(this.centros.get(j));
+					if(distTemp<distancia) {
+						distancia=distTemp;
+						centro=this.centros.get(j);
+					}
+				}
+				distancias = distancias +  distancia;
+				this.crimes.get(i).setCentro(centro);
+				this.crimes.get(i).setDistCentro(distancia);
+			}
+			
+		}
+		System.out.println("soma das distancias: " + distancias);
+		
+	}
+	
 	public void printCentrosN(){
 		int[] nCentro= new int[this.centros.size()];
 		
@@ -306,10 +340,104 @@ public class CrimeRepo implements Serializable{
 		this.centros=novosCentros;
 	}
 	
+	public void setNovosCentrosManhattan(){
+		ArrayList<Crime> novosCentros = new ArrayList<>();
+		Crime centro=null;
+		Crime novoCentro = this.crimes.get(0);
+		int ocorrencias;
+		double distancia=100000000;
+		double distNova=100000000;
+		
+		System.out.println("criando os novos centros");
+		
+		
+		double dia;
+		double mes;
+		double ano;
+		double sexo;
+		double tArma;
+		double idade;
+		double cvli;
+		double latitude;
+		double longitude;
+		
+		for(int i=0;i<this.centros.size();i++) {
+			
+			centro=this.centros.get(i);
+			ocorrencias=0;
+			distancia=100000000;
+			distNova=100000000;
+			
+			dia=0;
+			mes=0;
+			ano=0;
+			sexo=0;
+			tArma=0;
+			idade=0;
+			cvli=0;
+			latitude=0;
+			longitude=0;
+			
+			//somando os valores de cada crime deste grupo
+			
+			for(int j=0;j<this.crimes.size();j++) {
+				if(this.crimes.get(j).getCentro()==centro) {
+					this.crimes.get(j).setCentroAnterio(centro);
+					ocorrencias++;
+					dia=dia+this.crimes.get(j).getDia();
+					mes=mes+this.crimes.get(j).getMes();
+					ano=ano+this.crimes.get(j).getAno();
+					sexo=sexo+this.crimes.get(j).getSexo();
+					tArma=tArma+this.crimes.get(j).gettArma();
+					idade=idade+this.crimes.get(j).getIdade();
+					cvli=cvli+this.crimes.get(j).getCvli();
+					latitude=latitude+this.crimes.get(j).getLatitude();
+					longitude=longitude+this.crimes.get(j).getLongitude();		
+				}
+			}
+			
+			//tirando a media para o novo centroide
+			//System.out.println("tirando a media para o novo centroide");
+			
+			dia=dia/ocorrencias;
+			mes=mes/ocorrencias;
+			ano=ano/ocorrencias;
+			sexo=sexo/ocorrencias;
+			tArma=tArma/ocorrencias;
+			idade=idade/ocorrencias;
+			cvli=cvli/ocorrencias;
+			latitude=latitude/ocorrencias;
+			longitude=longitude/ocorrencias;
+
+			//calculando a distancia do novo centroide para os crimes
+			
+			for(int j=0;j<this.crimes.size();j++) {
+				if(this.crimes.get(j).getCentro()==centro){
+					distNova=this.crimes.get(j).calcDistManhattan(dia, mes, ano, sexo, tArma, idade, cvli, latitude, longitude);
+					//System.out.println(distNova+" "+distancia);
+					if(distNova<distancia) {
+						distancia=distNova;
+						novoCentro=this.crimes.get(j);
+					}
+				}
+			}
+			
+
+			novosCentros.add(novoCentro);
+			distancia = 10000000;
+			
+		}
+		//substituindo novos centros
+		
+		this.centros=novosCentros;
+	}
+	
 	public double indiceDunn() {
 		
 		double menorDistanciaElmtosDifGrupos =  1000000.0;
 		double maiorDistanciaIntraGrupos = 0.0;
+		double menorDistTempElemtosDif;
+		double maiorDistTempIntraGrupos;
 		double dunnIndex = 0.0;
 		
 		for (int i  = 0; i < this.centros.size(); i++) {
@@ -321,14 +449,16 @@ public class CrimeRepo implements Serializable{
 					//se a distancia entre os elementos de grupos diferentes
 					//for menor que a menor distancia entre  elementos de grupos diferentes
 					//Seta-se o valor para a variável de menor distancia
-					if(this.crimes.get(i).calcDist(this.crimes.get(j)) < menorDistanciaElmtosDifGrupos)
-					menorDistanciaElmtosDifGrupos = this.crimes.get(i).calcDist(this.crimes.get(j));
-					
+					menorDistTempElemtosDif = this.crimes.get(i).calcDist(this.crimes.get(j));
+					if(menorDistTempElemtosDif < menorDistanciaElmtosDifGrupos) {
+						menorDistanciaElmtosDifGrupos = menorDistTempElemtosDif;
+					}
 					//Se a menor distancia entre os elementos de grupos diferentes
 					//for maior que a maior distancia entre os grupos
 					//seta-se a maior distancia entre os grupos
-					else if(this.centros.get(i).getCentro().calcDist(this.crimes.get(j).getCentro()) > maiorDistanciaIntraGrupos){
-						maiorDistanciaIntraGrupos = this.crimes.get(i).getCentro().calcDist(this.crimes.get(j).getCentro());
+					 maiorDistTempIntraGrupos = this.centros.get(i).getCentro().calcDist(this.crimes.get(j).getCentro());
+					 if(maiorDistTempIntraGrupos > maiorDistanciaIntraGrupos){
+						maiorDistanciaIntraGrupos = maiorDistTempIntraGrupos;
 					}
 				}
 				
@@ -336,7 +466,45 @@ public class CrimeRepo implements Serializable{
 		}
 			dunnIndex = menorDistanciaElmtosDifGrupos/maiorDistanciaIntraGrupos;
 		
-		System.out.println("Indice Dunn: "+dunnIndex);
+//		System.out.println("Indice Dunn: "+dunnIndex);
+		return dunnIndex;
+	}
+	
+	public double indiceDunnManhattan() {
+		
+		double menorDistanciaElmtosDifGrupos =  1000000.0;
+		double maiorDistanciaIntraGrupos = 0.0;
+		double menorDistTempElemtosDif;
+		double maiorDistTempIntraGrupos;
+		double dunnIndex = 0.0;
+		
+		for (int i  = 0; i < this.centros.size(); i++) {
+			for(int j = 0; j < this.crimes.size(); j++) {
+				
+				//condição que verifica se o crime pertence não pertence ao mesmo grupo
+				if(this.crimes.get(i).getCentro() != this.crimes.get(j).getCentro()) {
+					
+					//se a distancia entre os elementos de grupos diferentes
+					//for menor que a menor distancia entre  elementos de grupos diferentes
+					//Seta-se o valor para a variável de menor distancia
+					menorDistTempElemtosDif = this.crimes.get(i).calcDistManhattan(this.crimes.get(j));
+					if(menorDistTempElemtosDif < menorDistanciaElmtosDifGrupos) {
+						menorDistanciaElmtosDifGrupos = menorDistTempElemtosDif;
+					}
+					//Se a menor distancia entre os elementos de grupos diferentes
+					//for maior que a maior distancia entre os grupos
+					//seta-se a maior distancia entre os grupos
+					 maiorDistTempIntraGrupos = this.centros.get(i).getCentro().calcDistManhattan(this.crimes.get(j).getCentro());
+					 if(maiorDistTempIntraGrupos > maiorDistanciaIntraGrupos){
+						maiorDistanciaIntraGrupos = maiorDistTempIntraGrupos;
+					}
+				}
+				
+			}
+		}
+			dunnIndex = menorDistanciaElmtosDifGrupos/maiorDistanciaIntraGrupos;
+		
+//		System.out.println("Indice Dunn: "+dunnIndex);
 		return dunnIndex;
 	}
 	
